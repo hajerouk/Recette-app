@@ -52,6 +52,7 @@ export default function Articles() {
     fetchCategories();
   }, [fetchCategories]);
 
+  
   // Rechargement des articles à chaque changement de filtre
   useEffect(() => {
     fetchArticles();
