@@ -7,7 +7,9 @@ const swagger_1 = require("@nestjs/swagger");
 async function bootstrap() {
     const app = await core_1.NestFactory.create(app_module_1.AppModule);
     app.enableCors({
-        origin: '*'
+        origin: '*',
+        methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
+        credentials: true,
     });
     app.useGlobalPipes(new common_1.ValidationPipe({
         whitelist: true,
@@ -22,9 +24,8 @@ async function bootstrap() {
         .build();
     const document = swagger_1.SwaggerModule.createDocument(app, config);
     swagger_1.SwaggerModule.setup('api-docs', app, document);
-    await app.listen(3000);
+    await app.listen(3000, '0.0.0.0');
     console.log(`App running on http://localhost:3000/api`);
     console.log(`Swagger docs on http://localhost:3000/api-docs`);
 }
-bootstrap();
 //# sourceMappingURL=main.js.map

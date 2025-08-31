@@ -7,10 +7,11 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
   app.enableCors({
-    origin: '*' 
+    origin: '*',
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
+    credentials: true,
   });
 
-  // Validation globale
   app.useGlobalPipes(
     new ValidationPipe({
       whitelist: true,
@@ -19,10 +20,8 @@ async function bootstrap() {
     }),
   );
 
-  // Préfixe global
   app.setGlobalPrefix('api');
 
-  // Swagger configuration
   const config = new DocumentBuilder()
     .setTitle('API Recettes')
     .setDescription('API pour gérer les catégories et articles')
@@ -30,11 +29,9 @@ async function bootstrap() {
     .build();
 
   const document = SwaggerModule.createDocument(app, config);
-  SwaggerModule.setup('api-docs', app, document); // accessible via /api-docs
+  SwaggerModule.setup('api-docs', app, document);
 
-  await app.listen(3000);
+  await app.listen(3000, '0.0.0.0'); // écoute sur toutes les interfaces
   console.log(`App running on http://localhost:3000/api`);
   console.log(`Swagger docs on http://localhost:3000/api-docs`);
 }
-
-bootstrap();

@@ -4,7 +4,7 @@ import {
   createArticle,
   updateArticle,
   deleteArticle,
-} from "../api/articlesService";
+} from "../api/articleService";
 import { getCategories } from "../api/categoriesService";
 
 export default function Articles() {
@@ -52,8 +52,6 @@ export default function Articles() {
     fetchCategories();
   }, [fetchCategories]);
 
-  
-  // Rechargement des articles à chaque changement de filtre
   useEffect(() => {
     fetchArticles();
   }, [filterCategory, filterFavorite, fetchArticles]);
@@ -66,7 +64,6 @@ export default function Articles() {
         return;
       }
 
-      // On enlève l'id avant envoi au back
       const { id, ...articleData } = newArticle;
 
       if (newArticle.id) {
@@ -77,7 +74,6 @@ export default function Articles() {
         setMessage({ type: "success", text: "Article ajouté avec succès." });
       }
 
-      // Reset formulaire
       setNewArticle({ id: null, title: "", description: "", categoryId: "", isFavorite: false });
       setViewList(true);
       fetchArticles();
@@ -105,7 +101,7 @@ export default function Articles() {
 
   const toggleFavorite = async (article) => {
     try {
-      await updateArticle(article.id, { ...article, isFavorite: !article.isFavorite });
+      await updateArticle(article.id, { isFavorite: !article.isFavorite });
       fetchArticles();
     } catch (error) {
       console.error(error);
@@ -117,7 +113,6 @@ export default function Articles() {
     <div className="page">
       <h2>Gestion des Articles</h2>
 
-      {/* Messages */}
       {message && <div className={`message ${message.type}`}>{message.text}</div>}
 
       {/* Filtres */}
@@ -136,7 +131,6 @@ export default function Articles() {
         </label>
       </div>
 
-      
       <div className="toggle-buttons">
         <button onClick={() => setViewList(true)}>Voir les articles</button>
         <button onClick={() => setViewList(false)}>Ajouter un article</button>
@@ -146,7 +140,7 @@ export default function Articles() {
         <ul className="list">
           {articles.map(article => (
             <li key={article.id}>
-              <span>{article.title} ({article.category.name})</span>
+              <span>{article.title} ({article.category?.name})</span>
               <div className="actions">
                 <button onClick={() => toggleFavorite(article)}>
                   {article.isFavorite ? "⭐" : "☆"}
@@ -190,3 +184,4 @@ export default function Articles() {
     </div>
   );
 }
+

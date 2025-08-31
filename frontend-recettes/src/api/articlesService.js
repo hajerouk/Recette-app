@@ -1,28 +1,29 @@
-import api from "./axiosInstance";
+import axios from "axios";
 
-// Lister les articles avec filtres
+// URL de ton backend sur Codespaces
+const API_URL = "https://special-guide-6v4q9q5x7pg3rqpj-3000.app.github.dev/api";
+
 export const getArticles = async (filters = {}) => {
-  const res = await api.get("/articles", { params: filters });
+  const res = await axios.get(`${API_URL}/articles`, { params: filters });
   return res.data;
 };
 
-// Créer un article
 export const createArticle = async (article) => {
-  // On s'assure de ne pas envoyer "id" dans le body
-  const { id, ...articleData } = article;
-  const res = await api.post("/articles", articleData);
+  const res = await axios.post(`${API_URL}/articles`, article);
   return res.data;
 };
 
-// Modifier un article
 export const updateArticle = async (id, article) => {
-  // On utilise PATCH car ton backend NestJS attend un PATCH et non un PUT
-  const res = await api.patch(`/articles/${id}`, article);
+  const res = await axios.patch(`${API_URL}/articles/${id}`, article);
   return res.data;
 };
 
-// Supprimer un article
 export const deleteArticle = async (id) => {
-  const res = await api.delete(`/articles/${id}`);
+  const res = await axios.delete(`${API_URL}/articles/${id}`);
+  return res.data;
+};
+
+export const getCategories = async () => {
+  const res = await axios.get(`${API_URL}/categories`);
   return res.data;
 };
