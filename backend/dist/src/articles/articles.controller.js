@@ -37,13 +37,16 @@ let ArticlesController = class ArticlesController {
         return this.articlesService.findAll(filters);
     }
     async findOne(id) {
-        return this.articlesService.findOne(+id);
+        return this.articlesService.findOne(Number(id));
     }
     async update(id, updateArticleDto) {
-        return this.articlesService.update(+id, updateArticleDto);
+        return this.articlesService.update(Number(id), updateArticleDto);
     }
     async remove(id) {
-        return this.articlesService.remove(+id);
+        return this.articlesService.remove(Number(id));
+    }
+    async partialUpdate(id, updateArticleDto) {
+        return this.articlesService.update(+id, updateArticleDto);
     }
 };
 exports.ArticlesController = ArticlesController;
@@ -70,7 +73,7 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], ArticlesController.prototype, "findOne", null);
 __decorate([
-    (0, common_1.Patch)(':id'),
+    (0, common_1.Put)(':id'),
     __param(0, (0, common_1.Param)('id')),
     __param(1, (0, common_1.Body)()),
     __metadata("design:type", Function),
@@ -84,6 +87,14 @@ __decorate([
     __metadata("design:paramtypes", [String]),
     __metadata("design:returntype", Promise)
 ], ArticlesController.prototype, "remove", null);
+__decorate([
+    (0, common_1.Patch)(':id'),
+    __param(0, (0, common_1.Param)('id')),
+    __param(1, (0, common_1.Body)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String, update_article_dto_1.UpdateArticleDto]),
+    __metadata("design:returntype", Promise)
+], ArticlesController.prototype, "partialUpdate", null);
 exports.ArticlesController = ArticlesController = __decorate([
     (0, swagger_1.ApiTags)('articles'),
     (0, common_1.Controller)('articles'),

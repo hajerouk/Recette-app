@@ -7,41 +7,41 @@ import { UpdateArticleDto } from './dto/update-article.dto';
 export class ArticlesService {
   constructor(private prisma: PrismaService) {}
 
+  // Créer un article
   async create(data: CreateArticleDto) {
-    // Vérifier si la catégorie existe
     const category = await this.prisma.category.findUnique({
       where: { id: data.categoryId },
     });
 
-    
     if (!category) {
-      throw new NotFoundException(
-        `Category with ID ${data.categoryId} not found`,
-      );
+      throw new NotFoundException(`Category with ID ${data.categoryId} not found`);
     }
 
-    return this.prisma.article.create({ data });
+    return this.prisma.article.create({
+      data,
+      include: { category: true },
+    });
   }
 
- async findAll(filters?: { categoryId?: number; isFavorite?: boolean }) {
-  const where: any = {};
+  // Lister les articles avec filtres optionnels
+  async findAll(filters?: { categoryId?: number; isFavorite?: boolean }) {
+    const where: any = {};
 
-  // Appliquer les filtres si fournis
-  if (filters?.categoryId) {
-    where.categoryId = filters.categoryId;
+    if (filters?.categoryId) {
+      where.categoryId = filters.categoryId;
+    }
+    if (filters?.isFavorite !== undefined) {
+      where.isFavorite = filters.isFavorite;
+    }
+
+    return this.prisma.article.findMany({
+      where,
+      include: { category: true },
+      orderBy: { id: 'desc' },
+    });
   }
-  if (filters?.isFavorite !== undefined) {
-    where.isFavorite = filters.isFavorite;
-  }
 
-  return this.prisma.article.findMany({
-    where,
-    include: { category: true },
-    orderBy: { id: 'desc' }, // optionnel : pour avoir les plus récents en premier
-  });
-}
-
-
+  // Récupérer un article par ID
   async findOne(id: number) {
     const article = await this.prisma.article.findUnique({
       where: { id },
@@ -55,16 +55,40 @@ export class ArticlesService {
     return article;
   }
 
+  // Mettre à jour un article
   async update(id: number, data: UpdateArticleDto) {
+    const article = await this.prisma.article.findUnique({ where: { id } });
+    if (!article) {
+      throw new NotFoundException(`Article with ID ${id} not found`);
+    }
+
+    // Si categoryId est fourni, vérifier que la catégorie existe
+    if (data.categoryId) {
+      const category = await this.prisma.category.findUnique({
+        where: { id: data.categoryId },
+      });
+      if (!category) {
+        throw new NotFoundException(`Category with ID ${data.categoryId} not found`);
+      }
+    }
+
     return this.prisma.article.update({
       where: { id },
       data,
+      include: { category: true },
     });
   }
 
+  // Supprimer un article
   async remove(id: number) {
+    const article = await this.prisma.article.findUnique({ where: { id } });
+    if (!article) {
+      throw new NotFoundException(`Article with ID ${id} not found`);
+    }
+
     return this.prisma.article.delete({
       where: { id },
+      include: { category: true },
     });
   }
 }

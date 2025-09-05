@@ -5,6 +5,11 @@ export declare class ArticlesController {
     private readonly articlesService;
     constructor(articlesService: ArticlesService);
     create(createArticleDto: CreateArticleDto): Promise<{
+        category: {
+            name: string;
+            id: number;
+        };
+    } & {
         id: number;
         title: string;
         description: string | null;
@@ -36,6 +41,11 @@ export declare class ArticlesController {
         categoryId: number;
     }>;
     update(id: string, updateArticleDto: UpdateArticleDto): Promise<{
+        category: {
+            name: string;
+            id: number;
+        };
+    } & {
         id: number;
         title: string;
         description: string | null;
@@ -43,6 +53,23 @@ export declare class ArticlesController {
         categoryId: number;
     }>;
     remove(id: string): Promise<{
+        category: {
+            name: string;
+            id: number;
+        };
+    } & {
+        id: number;
+        title: string;
+        description: string | null;
+        isFavorite: boolean;
+        categoryId: number;
+    }>;
+    partialUpdate(id: string, updateArticleDto: UpdateArticleDto): Promise<{
+        category: {
+            name: string;
+            id: number;
+        };
+    } & {
         id: number;
         title: string;
         description: string | null;

@@ -1,11 +1,13 @@
-import axiosInstance from "./axiosInstance";
+import api from "./axiosInstance";
 
 export const getCategories = async () => {
-  const res = await axiosInstance.get("/categories"); 
+  const res = await api.get("/categories");
   return res.data;
 };
 
+
+
 export const createCategory = async (name) => {
-  const res = await axiosInstance.post("/categories", { name });
+  const res = await api.post("/categories", { name });
   return res.data;
 };

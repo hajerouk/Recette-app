@@ -22,11 +22,19 @@ let CategoriesController = class CategoriesController {
     constructor(categoriesService) {
         this.categoriesService = categoriesService;
     }
-    getAll() {
+    async getAll() {
         return this.categoriesService.findAll();
     }
-    create(createCategoryDto) {
-        return this.categoriesService.create(createCategoryDto);
+    async create(createCategoryDto) {
+        try {
+            return await this.categoriesService.create(createCategoryDto);
+        }
+        catch (error) {
+            if (error.code === 'P2002') {
+                throw new common_1.BadRequestException(`Category with name '${createCategoryDto.name}' already exists`);
+            }
+            throw error;
+        }
     }
 };
 exports.CategoriesController = CategoriesController;
@@ -34,14 +42,14 @@ __decorate([
     (0, common_1.Get)(),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", []),
-    __metadata("design:returntype", void 0)
+    __metadata("design:returntype", Promise)
 ], CategoriesController.prototype, "getAll", null);
 __decorate([
     (0, common_1.Post)(),
     __param(0, (0, common_1.Body)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [create_category_dto_1.CreateCategoryDto]),
-    __metadata("design:returntype", void 0)
+    __metadata("design:returntype", Promise)
 ], CategoriesController.prototype, "create", null);
 exports.CategoriesController = CategoriesController = __decorate([
     (0, swagger_1.ApiTags)('categories'),

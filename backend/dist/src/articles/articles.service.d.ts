@@ -5,6 +5,11 @@ export declare class ArticlesService {
     private prisma;
     constructor(prisma: PrismaService);
     create(data: CreateArticleDto): Promise<{
+        category: {
+            name: string;
+            id: number;
+        };
+    } & {
         id: number;
         title: string;
         description: string | null;
@@ -39,6 +44,11 @@ export declare class ArticlesService {
         categoryId: number;
     }>;
     update(id: number, data: UpdateArticleDto): Promise<{
+        category: {
+            name: string;
+            id: number;
+        };
+    } & {
         id: number;
         title: string;
         description: string | null;
@@ -46,6 +56,11 @@ export declare class ArticlesService {
         categoryId: number;
     }>;
     remove(id: number): Promise<{
+        category: {
+            name: string;
+            id: number;
+        };
+    } & {
         id: number;
         title: string;
         description: string | null;

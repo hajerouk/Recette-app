@@ -24,7 +24,6 @@ let CategoriesService = class CategoriesService {
             });
         }
         catch (err) {
-            console.error(err);
             throw new common_1.InternalServerErrorException('Erreur lors de la récupération des catégories');
         }
     }
@@ -44,9 +43,8 @@ let CategoriesService = class CategoriesService {
             });
         }
         catch (err) {
-            console.error(err);
             if (err.code === 'P2002') {
-                throw new common_1.BadRequestException('Une catégorie avec ce nom existe déjà');
+                throw new common_1.BadRequestException(`Une catégorie avec le nom '${createCategoryDto.name}' existe déjà`);
             }
             throw new common_1.InternalServerErrorException('Erreur lors de la création de la catégorie');
         }

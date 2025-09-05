@@ -18,6 +18,7 @@ exports.ArticlesModule = ArticlesModule = __decorate([
     (0, common_1.Module)({
         controllers: [articles_controller_1.ArticlesController],
         providers: [articles_service_1.ArticlesService, prisma_service_1.PrismaService],
+        exports: [articles_service_1.ArticlesService],
     })
 ], ArticlesModule);
 //# sourceMappingURL=articles.module.js.map

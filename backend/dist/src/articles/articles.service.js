@@ -24,7 +24,10 @@ let ArticlesService = class ArticlesService {
         if (!category) {
             throw new common_1.NotFoundException(`Category with ID ${data.categoryId} not found`);
         }
-        return this.prisma.article.create({ data });
+        return this.prisma.article.create({
+            data,
+            include: { category: true },
+        });
     }
     async findAll(filters) {
         const where = {};
@@ -51,14 +54,32 @@ let ArticlesService = class ArticlesService {
         return article;
     }
     async update(id, data) {
+        const article = await this.prisma.article.findUnique({ where: { id } });
+        if (!article) {
+            throw new common_1.NotFoundException(`Article with ID ${id} not found`);
+        }
+        if (data.categoryId) {
+            const category = await this.prisma.category.findUnique({
+                where: { id: data.categoryId },
+            });
+            if (!category) {
+                throw new common_1.NotFoundException(`Category with ID ${data.categoryId} not found`);
+            }
+        }
         return this.prisma.article.update({
             where: { id },
             data,
+            include: { category: true },
         });
     }
     async remove(id) {
+        const article = await this.prisma.article.findUnique({ where: { id } });
+        if (!article) {
+            throw new common_1.NotFoundException(`Article with ID ${id} not found`);
+        }
         return this.prisma.article.delete({
             where: { id },
+            include: { category: true },
         });
     }
 };

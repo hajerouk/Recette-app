@@ -4,7 +4,7 @@ import {
   createArticle,
   updateArticle,
   deleteArticle,
-} from "../api/articleService";
+} from "../api/articlesService.js";
 import { getCategories } from "../api/categoriesService";
 
 export default function Articles() {
@@ -14,6 +14,7 @@ export default function Articles() {
   const [filterCategory, setFilterCategory] = useState("");
   const [filterFavorite, setFilterFavorite] = useState(false);
   const [message, setMessage] = useState(null);
+  const [loading, setLoading] = useState(false);
   const [newArticle, setNewArticle] = useState({
     id: null,
     title: "",
@@ -25,6 +26,7 @@ export default function Articles() {
   // Récupération des articles avec filtres
   const fetchArticles = useCallback(async () => {
     try {
+      setLoading(true);
       const filters = {};
       if (filterCategory) filters.categoryId = Number(filterCategory);
       if (filterFavorite) filters.isFavorite = true;
@@ -34,16 +36,22 @@ export default function Articles() {
     } catch (error) {
       console.error(error);
       setMessage({ type: "error", text: "Erreur lors du chargement des articles." });
+    } finally {
+      setLoading(false);
     }
   }, [filterCategory, filterFavorite]);
 
   // Récupération des catégories
   const fetchCategories = useCallback(async () => {
     try {
+      setLoading(true);
       const data = await getCategories();
       setCategories(data);
     } catch (error) {
       console.error(error);
+      setMessage({ type: "error", text: "Erreur lors du chargement des catégories." });
+    } finally {
+      setLoading(false);
     }
   }, []);
 
@@ -65,6 +73,7 @@ export default function Articles() {
       }
 
       const { id, ...articleData } = newArticle;
+      articleData.categoryId = Number(articleData.categoryId);
 
       if (newArticle.id) {
         await updateArticle(newArticle.id, articleData);
@@ -136,7 +145,9 @@ export default function Articles() {
         <button onClick={() => setViewList(false)}>Ajouter un article</button>
       </div>
 
-      {viewList ? (
+      {loading ? (
+        <p>Chargement...</p>
+      ) : viewList ? (
         <ul className="list">
           {articles.map(article => (
             <li key={article.id}>
@@ -184,4 +195,3 @@ export default function Articles() {
     </div>
   );
 }
-
